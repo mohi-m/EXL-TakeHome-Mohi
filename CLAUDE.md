@@ -14,6 +14,12 @@ These rules must never be violated:
 - **No silent drops.** Every record that fails a FK check or value validation must land in the `dq_exception_report` table (and `outputs/exceptions.csv`), not be discarded.
 - **Risky columns load as TEXT in staging.** Timestamps (e.g. `order_ts`, `created_ts`) and monetary amounts (e.g. `order_total`, `amount`) are loaded as TEXT in the raw staging tables; type-casting and parsing happen in `src/transform.py`.
 
+## Coding Standards
+
+- **Docstrings on every function.** Every `def` must have a docstring explaining what it does, why any non-obvious decisions were made, and what it returns. One-liners are fine for trivial helpers; multi-line for anything with logic.
+- **Inline comments on complex code.** Any loop, expression, or SQL fragment that isn't immediately obvious to a reader must have a short comment explaining the *why*, not the *what*.
+- **Consistent logging.** Every Python module must obtain its logger with `logger = logging.getLogger(__name__)` at module level. Use `logging.basicConfig(...)` only in `if __name__ == "__main__"` blocks, never inside functions or at import time. Log levels: `INFO` for stage boundaries and row counts, `DEBUG` for schema/column details, `WARNING` for unexpected-but-recoverable conditions, `ERROR` for failures before raising.
+
 ## Commands
 
 ```bash
