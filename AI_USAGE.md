@@ -79,3 +79,26 @@
 *   Verified customer dataset. Decided to merge C001 and C019 since both have same name, same number but the email-id and signup date is different, indicaiting that it is a duplication. Also there were no orders from C019
 
 ---
+
+### Task 2: Generating the ingest.py script
+
+#### 1. Prompt
+*   Read each CSV with stdlib csv.DictReader; read JSONL line-by-line with json.loads. Create staging_customers, staging_products, staging_orders, staging_payments, staging_support_tickets in outputs/curated.sqlite with every column TEXT (satisfies the TEXT-staging constraint). Load as-is, no cleaning.
+
+#### 2. Iterations
+*   **Iteration 1:**  Add comments above each method and also in places which might be hard to understand.
+*   **Iteration 2:**  Add logging to the script.
+
+#### 3. Generated Code: Accepted vs. Rejected
+*   **Accepted:** 
+    *   Accepted the Plan generated in the PLAN.md
+*   **Rejected:** 
+    *   N/A
+
+#### 4. Manual Fixes & Modifications
+*   N/A
+
+#### 5. Verification & Testing Steps
+*   Verified the staged tables and cross checked it with the CSV. Made sure no data got dropped.
+
+---
