@@ -49,8 +49,6 @@ Columns: customer_id, first_name, last_name, email, phone, country, state, signu
 Columns: product_id, product_name, category, unit_price, active_flag
 - **Null rates:** 0% across all columns.
 - Issues:
-  - **Inactive product sold:** `P011` (Protein Bar Box) has `active_flag=N` but is
-    referenced by completed order `O1015`.
   - `unit_price` stored as TEXT → cast to decimal.
 
 ### orders.csv — 31 data rows (30 unique order_ids), 8 columns

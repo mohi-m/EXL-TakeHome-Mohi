@@ -14,7 +14,7 @@
 *   Build the folder structed based on the following structure: <Struture from document>
 
 #### 2. Iterations
-*   **Iteration 1:** Updated from DuckDB to SQLite (Personal preference) 
+*   **Iteration 1:** Updated from DuckDB to SQLite {Personal preference} 
 
 #### 3. Generated Code: Accepted vs. Rejected
 *   **Accepted:** 
@@ -36,8 +36,8 @@
 *   /init
 
 #### 2. Iterations
-*   **Iteration 1:** Updated from DuckDB to SQLite (Personal preference) 
-*   **Iteration 2:** Make sure the following hard constriants are present in the claude.md (Pulled by manually checking assesment doc) 
+*   **Iteration 1:** Updated from DuckDB to SQLite {Personal preference}
+*   **Iteration 2:** Make sure the following hard constriants are present in the claude.md {Pulled by manually checking assesment doc} 
 
 #### 3. Generated Code: Accepted vs. Rejected
 *   **Accepted:** 
@@ -62,18 +62,20 @@
   derives the curated schema and DQ checks from those files. Do not write pipeline code yet. Output the plan as PLAN.md. 
 
 #### 2. Iterations
-*   **Iteration 1:** Updated from DuckDB to SQLite (Personal preference) 
-*   **Iteration 2:** Make sure the following hard constriants are present in the claude.md (Pulled by manually checking assesment doc) 
+*   **Iteration 1:** Add the plan.md manually to the project {As the ultraplan cloud session was not able to commit the file}
 
 #### 3. Generated Code: Accepted vs. Rejected
 *   **Accepted:** 
-    *   Generated after asking explicit changes to the MD file
+    *   Accepted the Plan generated in the PLAN.md
 *   **Rejected:** 
-    *   N/A
+    *   Decided to reject the following issue "Inactive product sold: P011 (Protein Bar Box) has active_flag=N but is referenced by completed order O1015."
 
 #### 4. Manual Fixes & Modifications
 *   For Customer tables reconciliation, manually chose deduplicate based on same IDs and same full name + Phone/email
 *   When agent asked to weather to use pandas or SQL, chose sql since working with a small dataset
+*   Decided to reject the following issue "Inactive product sold: P011 (Protein Bar Box) has active_flag=N but is referenced by completed order O1015." - since the product could have been made inactive after the order happened
 
 #### 5. Verification & Testing Steps
-*   Opened and checked all the CLAUDE.md file
+*   Verified customer dataset. Decided to merge C001 and C019 since both have same name, same number but the email-id and signup date is different, indicaiting that it is a duplication. Also there were no orders from C019
+
+---
