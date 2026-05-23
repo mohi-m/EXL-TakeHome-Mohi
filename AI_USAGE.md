@@ -137,3 +137,26 @@ fact_customer_issue: customer_key via crosswalk (FK where possible), preserve is
 *   Verfied the updated sttm file using git diff
 
 ---
+
+### Task 5: Generating the transform.py script {RETRY}
+
+#### 1. Prompt
+*   Read the @PLAN.md and perform step 2 in part B
+
+#### 2. Iterations
+*   **Iteration 1:**  N/A
+
+#### 3. Generated Code: Accepted vs. Rejected
+*   **Accepted:** 
+    *   Asking claude code to read the plan.md kept it grounded to the plan and prduced the correct output.
+*   **Rejected:** 
+    *   N/A
+
+
+#### 4. Manual Fixes & Modifications
+*   N/A
+
+#### 5. Verification & Testing Steps
+*   Verified the Schema of each table created with the sttm_target_mapping also verifed the values in the table especially the errneous cases.
+
+---
