@@ -2,22 +2,43 @@ target_table,target_column,source_file,source_column,transformation_rule
 dim_customer,customer_key,customers.csv,customer_id,Use customer_id after duplicate-resolution rule.
 dim_customer,full_name,customers.csv,"first_name,last_name",Concatenate first and last name with space.
 dim_customer,email,customers.csv,email,Lowercase; flag missing as DQ issue; do not fabricate.
+dim_customer,phone,customers.csv,phone,Preserve as-is; flag missing as DQ issue.
 dim_customer,standard_country,customers.csv,country,"Map USA, US, United States to USA."
 dim_customer,standard_state,customers.csv,state,Map full state names to two-letter code where possible.
+dim_customer,signup_date,customers.csv,signup_date,Parse to date; flag unparseable values as DQ issue.
 dim_customer,loyalty_tier,customers.csv,loyalty_tier,Preserve source tier after resolving duplicate customer rows.
+dim_customer,duplicate_resolution_flag,customers.csv,customer_id,Set to 1 if record was identified as a duplicate and merged; 0 otherwise.
 dim_product,product_key,products.csv,product_id,Preserve product_id.
 dim_product,product_name,products.csv,product_name,Preserve product name.
 dim_product,category,products.csv,category,Preserve category.
 dim_product,unit_price,products.csv,unit_price,Cast to decimal.
+dim_product,active_flag,products.csv,active_flag,Cast to boolean/integer (1=active 0=inactive); default to 1 if missing.
 fact_order,order_key,orders.csv,order_id,Preserve order_id after dedup.
 fact_order,customer_key,orders.csv,customer_id,Foreign key to dim_customer; invalid IDs go to exception report.
 fact_order,product_key,orders.csv,product_id,Foreign key to dim_product; invalid IDs go to exception report.
 fact_order,order_date,orders.csv,order_ts,Parse mixed timestamp formats; normalize to date.
 fact_order,quantity,orders.csv,quantity,Cast to integer; quantity must be greater than zero for completed orders.
-fact_order,gross_order_amount,orders.csv,order_total,Cast to decimal and compare to quantity * unit_price.
+fact_order,order_status,orders.csv,order_status,Preserve source status value.
+fact_order,shipping_state,orders.csv,shipping_state,Map full state names to two-letter code where possible.
+fact_order,gross_order_amount,orders.csv,order_total,Cast to decimal; represents the raw order total from source.
+fact_order,calculated_order_amount,orders.csv,"quantity,product_id",Derived: quantity * unit_price from dim_product; requires product_key join.
+fact_order,order_amount_variance,orders.csv,"order_total,quantity,product_id",Derived: gross_order_amount minus calculated_order_amount; flag non-zero as DQ issue.
 fact_payment,payment_key,payments.csv,payment_id,Preserve payment_id.
 fact_payment,order_key,payments.csv,order_id,Foreign key to fact_order; orphan payments go to exception report.
+fact_payment,payment_date,payments.csv,payment_ts,Parse timestamp; normalize to date.
+fact_payment,payment_method,payments.csv,payment_method,Preserve source payment method value.
+fact_payment,payment_status,payments.csv,payment_status,Preserve source payment status value.
 fact_payment,payment_amount,payments.csv,amount,Cast to decimal; compare settled amount to completed order total.
+fact_customer_issue,ticket_id,support_tickets.jsonl,ticket_id,Preserve source ticket_id.
 fact_customer_issue,customer_key,support_tickets.jsonl,customer_id,Foreign key to dim_customer where possible.
+fact_customer_issue,created_date,support_tickets.jsonl,created_ts,Parse ISO timestamp; normalize to date.
+fact_customer_issue,channel,support_tickets.jsonl,channel,Preserve source channel value.
 fact_customer_issue,issue_category,support_tickets.jsonl,category,Preserve source category.
 fact_customer_issue,sentiment,support_tickets.jsonl,sentiment,Preserve source sentiment.
+fact_customer_issue,description,support_tickets.jsonl,description,Preserve source description text.
+dq_exception_report,rule_id,pipeline,derived,Identifier of the DQ rule that triggered the exception (e.g. DQ001).
+dq_exception_report,dataset,pipeline,derived,Name of the source table or file where the offending record originated.
+dq_exception_report,record_key,pipeline,derived,Primary key value of the offending record for traceability.
+dq_exception_report,severity,pipeline,derived,Severity level from data_quality_rules.csv (High / Medium / Low).
+dq_exception_report,issue_description,pipeline,derived,Human-readable description of why the record failed the rule.
+dq_exception_report,suggested_action,pipeline,derived,Recommended remediation action from data_quality_rules.csv.
