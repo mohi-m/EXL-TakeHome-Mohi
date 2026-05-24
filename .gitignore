@@ -1,4 +1,40 @@
-outputs/curated.sqlite
+# Python
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# pytest
 .pytest_cache/
+.coverage
+htmlcov/
+
+# Generated pipeline outputs (produced by src/pipeline.py — not source files)
+outputs/curated.sqlite
+outputs/business_answers.md
+outputs/data_quality_report.md
+outputs/exceptions.csv
+
+# Claude Code local settings
+.claude/settings.local.json
+
+# Environment variables
+.env
+.env.*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
