@@ -3,12 +3,16 @@
 import csv
 import logging
 import sqlite3
+from datetime import date
 from pathlib import Path
 from typing import Callable
 
 DB_PATH = Path("outputs/curated.sqlite")
 INPUT_DIR = Path("input_data")
+OUTPUT_DIR = Path("outputs")
 DQ_RULES_PATH = INPUT_DIR / "data_quality_rules.csv"
+EXCEPTIONS_CSV_PATH = OUTPUT_DIR / "exceptions.csv"
+DQ_REPORT_PATH = OUTPUT_DIR / "data_quality_report.md"
 
 logger = logging.getLogger(__name__)
 
@@ -495,6 +499,119 @@ def _check_dq014(conn: sqlite3.Connection, rule: dict) -> int:
     return count
 
 
+def _export_exceptions_csv(conn: sqlite3.Connection, path: Path) -> int:
+    """
+    Write every row in dq_exception_report to a CSV file, recreating it on each run.
+
+    Columns written match the table schema: rule_id, dataset, record_key, severity,
+    issue_description, suggested_action.  Rows are ordered by rule_id then record_key
+    for deterministic diffs.  Returns the number of data rows written.
+    """
+    path.parent.mkdir(parents=True, exist_ok=True)
+    rows = conn.execute(
+        "SELECT rule_id, dataset, record_key, severity, issue_description, suggested_action "
+        "FROM dq_exception_report ORDER BY rule_id, record_key"
+    ).fetchall()
+    with open(path, "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow([
+            "rule_id", "dataset", "record_key", "severity",
+            "issue_description", "suggested_action",
+        ])
+        writer.writerows(rows)
+    logger.info("Exported %d exception rows to %s", len(rows), path)
+    return len(rows)
+
+
+def _generate_dq_report(conn: sqlite3.Connection, rules: dict, path: Path) -> None:
+    """
+    Render a Markdown data-quality report to path.
+
+    Three sections:
+    1. Executive summary — generation date, totals.
+    2. Summary table — one row per rule, with exception count.
+    3. Per-rule detail — offending record_keys and issue descriptions.
+
+    All values come from dq_exception_report and the rules dict; nothing is hard-coded.
+    Rules with zero exceptions are listed in the summary table and shown as 'passed clean'
+    in the detail section so readers can confirm a rule was actually executed.
+    """
+    rows = conn.execute(
+        "SELECT rule_id, record_key, issue_description "
+        "FROM dq_exception_report ORDER BY rule_id, record_key"
+    ).fetchall()
+
+    exceptions_by_rule: dict = {}
+    for rule_id, record_key, issue_desc in rows:
+        exceptions_by_rule.setdefault(rule_id, []).append((record_key, issue_desc))
+
+    total = len(rows)
+    triggered = sum(1 for r in rules if r in exceptions_by_rule)
+    passed = len(rules) - triggered
+
+    lines = [
+        "# Data Quality Report",
+        "",
+        f"**Generated:** {date.today().isoformat()}  ",
+        "**Rules source:** `input_data/data_quality_rules.csv`",
+        "",
+        "---",
+        "",
+        "## Summary",
+        "",
+        f"**{total} exception(s)** detected across **{len(rules)} rules** "
+        f"({triggered} triggered, {passed} passed clean).",
+        "",
+        "| Rule ID | Dataset | Severity | Description | Exceptions |",
+        "|---------|---------|----------|-------------|:----------:|",
+    ]
+
+    for rule_id, rule in rules.items():
+        cnt = len(exceptions_by_rule.get(rule_id, []))
+        lines.append(
+            f"| {rule_id} | {rule['dataset']} | {rule['severity']} | "
+            f"{rule['rule_description']} | {cnt} |"
+        )
+
+    lines += ["", "---", "", "## Rule Details", ""]
+
+    for rule_id, rule in rules.items():
+        exceptions = exceptions_by_rule.get(rule_id, [])
+        cnt = len(exceptions)
+        status = f"{cnt} exception(s)" if cnt else "passed clean"
+
+        lines.append(f"### {rule_id} — {rule['rule_description']}")
+        lines.append(
+            f"**Dataset:** {rule['dataset']} | "
+            f"**Severity:** {rule['severity']} | "
+            f"**Status:** {status}"
+        )
+        lines.append("")
+
+        if cnt == 0:
+            lines.append("No exceptions — this rule passed.")
+        else:
+            lines.append("| Record Key | Issue Description |")
+            lines.append("|------------|-------------------|")
+            for record_key, issue_desc in exceptions:
+                # Escape pipe characters so they don't break the Markdown table
+                safe_desc = issue_desc.replace("|", "\\|")
+                lines.append(f"| `{record_key}` | {safe_desc} |")
+
+        suggested = rule.get("suggested_action", "")
+        if suggested:
+            lines += ["", f"**Suggested action:** {suggested}"]
+
+        lines += ["", "---", ""]
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("\n".join(lines), encoding="utf-8")
+    logger.info(
+        "Data quality report written to %s (%d rules, %d exceptions)",
+        path, len(rules), total,
+    )
+
+
 # Maps each rule_id from data_quality_rules.csv to its check function.
 _RULE_REGISTRY: dict[str, Callable[[sqlite3.Connection, dict], int]] = {
     "DQ001": _check_dq001,
@@ -524,6 +641,10 @@ def run(conn: sqlite3.Connection) -> None:
     CSV (not hard-coded).  Rule IDs in the CSV with no matching registry entry are
     logged as warnings so that new rules can be staged in the CSV before their
     function is written.
+
+    After all checks complete the results are flushed to two output files:
+    - outputs/exceptions.csv  — full exception table as a flat CSV
+    - outputs/data_quality_report.md — human-readable per-rule summary
     """
     logger.info("Starting quality_checks stage")
 
@@ -538,6 +659,8 @@ def run(conn: sqlite3.Connection) -> None:
         total += fn(conn, rule)
 
     conn.commit()
+    _export_exceptions_csv(conn, EXCEPTIONS_CSV_PATH)
+    _generate_dq_report(conn, rules, DQ_REPORT_PATH)
     logger.info("quality_checks stage complete — %d total exception rows written", total)
 
 
