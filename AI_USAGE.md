@@ -261,7 +261,7 @@ fact_customer_issue: customer_key via crosswalk (FK where possible), preserve is
 ### Task 9: Generating the curated_model.sql file qhich contains the DDL statements
 
 #### 1. Prompt
-*   Read the @PLAN.md and perform step 5 in part B
+*   Read the @PLAN.md and perform step 6 in part B
 
 #### 2. Iterations
 *   **Iteration 1:**  N/A
@@ -281,4 +281,25 @@ fact_customer_issue: customer_key via crosswalk (FK where possible), preserve is
 
 ---
 
+### Task 10: Generating Tests
 
+#### 1. Prompt
+*   Read the @PLAN.md and perform step 7 in part B
+
+#### 2. Iterations
+*   **Iteration 1:**  N/A
+
+#### 3. Generated Code: Accepted vs. Rejected
+*   **Accepted:** 
+    *   Generated tests for all the given cases correctly.
+*   **Rejected:** 
+    *   N/A
+
+
+#### 4. Manual Fixes & Modifications
+*   N/A
+
+#### 5. Verification & Testing Steps
+*   Read the code and made sure it covers a wide range of cases.
+
+---

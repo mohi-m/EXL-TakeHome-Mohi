@@ -168,14 +168,10 @@ flowchart LR
 - Companion DDL mirroring the Python logic.
 
 ### 7. `tests/test_quality_checks.py`
-- One pytest per rule asserting the known offending IDs land in
-  `dq_exception_report` (e.g. O1018 for DQ004, O1021 for DQ008/DQ010,
-  PMT029 for DQ009, T010 for DQ011).
+- Generate a lightweight validation script (in the `tests/` directory) that outputs a simple "PASS/FAIL" Data Quality report.
+The script must include these four specific assertions:
+1. Row counts: Verify that Total Raw Rows = (Curated Rows) + (Exception Rows).
+2. Referential checks: Validate foreign key relationships and check for orphan records.
+3. Amount checks: Validate domain logic boundaries (e.g., aggregations, non-negative amounts).
+4. Parsing checks: Verify correct data types, schema conformance, and that primary keys are not NULL.
 
----
-
-## Deliverable & verification for THIS task
-- **Only output:** create `PLAN.md` at repo root with Parts A + B above. No code,
-  no DB, no pipeline files touched.
-- Verify by opening `PLAN.md` and confirming the audit numbers match the source
-  files and every DQ rule (DQ001–DQ012) and STTM target column is addressed.
