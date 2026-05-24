@@ -163,8 +163,12 @@ flowchart LR
   customer / invalid product / suspicious qty (union from `dq_exception_report` +
   missing-payment anti-join, e.g. O1024); (4) states by completed revenue
   (standardized); (5) join negative-sentiment tickets to exception customers.
-- Render `outputs/data_quality_report.md`, `outputs/exceptions.csv`,
-  `outputs/business_answers.md`.
+- Render `outputs/business_answers.md`. In the the markdown the questions should be the following text:
+  1. What is completed revenue by month?
+  2. Who are the top 10 customers by completed order value?
+  3. Which orders have payment mismatches, missing payments, invalid customer references, invalid product references, or suspicious quantities?
+  4. Which states have the highest completed revenue?
+  5. Is there any visible relationship between negative support tickets and order/payment exceptions?
 
 ### 5. `src/pipeline.py`
 - Orchestrate ingest → transform → quality_checks → reporting; (re)create the

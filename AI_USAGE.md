@@ -171,6 +171,7 @@ fact_customer_issue: customer_key via crosswalk (FK where possible), preserve is
   - create a new row in the @input_data/data_quality_rules.csv for the cross=id duplicates record and then update the @src/quality_checks.py script accordingly                               
   - create a new row in the @input_data/data_quality_rules.csv for the inactive product sold rule                                                                                         
   - Also in the script, populate the suggested_action column. Add a suggest action for reach data quality issue in the script and I will manually check it.
+  - Also update the @src/quality_checks.py script to output the data quality issues to the @outputs/exceptions.csv and also generate a report to @outputs/data_quality_report.md
 
 #### 3. Generated Code: Accepted vs. Rejected
 *   **Accepted:** 
