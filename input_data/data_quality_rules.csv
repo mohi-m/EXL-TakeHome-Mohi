@@ -1,13 +1,15 @@
-rule_id,dataset,rule_description,severity
-DQ001,customers,customer_id must be unique after duplicate resolution,High
-DQ002,customers,email should be present and syntactically valid when available,Medium
-DQ003,customers,country and state must be standardized,Medium
-DQ004,orders,order_id must be unique,High
-DQ005,orders,customer_id must exist in customers,High
-DQ006,orders,product_id must exist in products,High
-DQ007,orders,completed orders must have positive quantity,High
-DQ008,orders,order_total should equal quantity times product unit_price,High
-DQ009,payments,payment order_id must exist in orders,High
-DQ010,payments,settled payment amount should equal completed order total,High
-DQ011,support_tickets,created_ts must parse to a valid timestamp,Medium
-DQ012,support_tickets,customer_id should exist in customers,Medium
+rule_id,dataset,rule_description,severity,suggested_action
+DQ001,customers,exact duplicate customer_ids exist in source data,High,"No further action needed"
+DQ002,customers,email is missing or absent for a customer,Medium,"Contact the customer to obtain a valid email address and update the source record; flag account for manual outreach"
+DQ003,customers,country or state value is non-standard (full name or variant spelling),Medium,"No further action needed"
+DQ004,orders,exact duplicate order_ids exist in source data,High,"No further action needed"
+DQ005,orders,order references a customer_id not present in the customers dataset,High,"Verify and correct the customer_id on the order; quarantine the order for manual review if the customer cannot be found"
+DQ006,orders,order references a product_id not present in the products dataset,High,"Verify and correct the product_id on the order; mark for review if the product cannot be identified"
+DQ007,orders,completed order has a non-positive quantity,High,"Investigate for data-entry error; correct the quantity or reclassify the order status (e.g. returned or cancelled)"
+DQ008,orders,stated order_total does not match quantity x unit_price,High,"Reconcile the order total with line-item pricing; escalate discrepancy to finance for adjustment or repricing"
+DQ009,payments,payment references an order_id not present in the orders dataset,High,"Trace the orphan payment to its correct order; link or initiate a finance write-off if unresolvable"
+DQ010,payments,settled payment amount differs from the completed order total,High,"Reconcile the settled amount with the order total; initiate a payment adjustment or chargeback as appropriate"
+DQ011,support_tickets,ticket created_ts cannot be parsed to a valid timestamp,Medium,"Correct the malformed timestamp in the source system; enforce ISO 8601 format (YYYY-MM-DD HH:MM:SS) at ticket creation"
+DQ012,support_tickets,ticket references a customer_id not present in the customers dataset,Medium,"Verify the customer reference on the ticket; link to the correct customer or create a new customer record"
+DQ013,customers,different customer_ids resolve to the same person via name and contact-info matching,High,"Verify the diplicates via the id_crosswalk table; currently it has been updated using the most complete or if both complete, the lowest customer_key"
+DQ014,orders,order references a product with active_flag = 0 (discontinued product),Medium,"Remove the inactive product from the order or reactivate the product; verify fulfilment capability and review pricing before shipment"

@@ -160,3 +160,30 @@ fact_customer_issue: customer_key via crosswalk (FK where possible), preserve is
 *   Verified the Schema of each table created with the sttm_target_mapping also verifed the values in the table especially the errneous cases.
 
 ---
+
+### Task 5: Generating the quality_checks.py script
+
+#### 1. Prompt
+*   Read the @PLAN.md and perform step 3 in part B
+
+#### 2. Iterations
+*   **Iteration 1:**  Perform the following changes:  
+  - create a new row in the @input_data/data_quality_rules.csv for the cross=id duplicates record and then update the @src/quality_checks.py script accordingly                               
+  - create a new row in the @input_data/data_quality_rules.csv for the inactive product sold rule                                                                                         
+  - Also in the script, populate the suggested_action column. Add a suggest action for reach data quality issue in the script and I will manually check it.
+
+#### 3. Generated Code: Accepted vs. Rejected
+*   **Accepted:** 
+    *   Accepted after the first iteration as it was able to indentify all the quality issues and some more.
+*   **Rejected:** 
+    *   N/A
+
+
+#### 4. Manual Fixes & Modifications
+*   Some of the suggested action did not make sense so updated it manually and made it blank. The issues like Country name US, USA and United States all normalised to USA does not need any further actions. So these changes are still recorded in the dq_exception_report but no suggested actions needed to be added for it.
+
+#### 5. Verification & Testing Steps
+*   Verfied each of the exception added in the dq_exception_record table and double checked if it missied any other issue or not.
+
+---
+
