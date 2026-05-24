@@ -221,7 +221,7 @@ fact_customer_issue: customer_key via crosswalk (FK where possible), preserve is
 
 #### 3. Generated Code: Accepted vs. Rejected
 *   **Accepted:** 
-    *   N/A
+    *   Accepted the changes as the output generated was correct and manually verfifed
 *   **Rejected:** 
     *   N/A
 
@@ -234,5 +234,51 @@ fact_customer_issue: customer_key via crosswalk (FK where possible), preserve is
 
 ---
 
+
+### Task 8: Generating the pipeline.py script
+
+#### 1. Prompt
+*   Read the @PLAN.md and perform step 5 in part B
+
+#### 2. Iterations
+*   **Iteration 1:**  N/A
+
+#### 3. Generated Code: Accepted vs. Rejected
+*   **Accepted:** 
+    *   Generated the code perfectly since it was a straight forward task.
+*   **Rejected:** 
+    *   N/A
+
+
+#### 4. Manual Fixes & Modifications
+*   N/A
+
+#### 5. Verification & Testing Steps
+*   Ran the pipeline script and verfied the output.
+
+---
+
+### Task 9: Generating the curated_model.sql file qhich contains the DDL statements
+
+#### 1. Prompt
+*   Read the @PLAN.md and perform step 5 in part B
+
+#### 2. Iterations
+*   **Iteration 1:**  N/A
+
+#### 3. Generated Code: Accepted vs. Rejected
+*   **Accepted:** 
+    *   The generated SQL was correct and created the correct database model.
+*   **Rejected:** 
+    *   N/A
+
+
+#### 4. Manual Fixes & Modifications
+*   It also generated the entire SQL logic to populate the field which was in the transform python script. Since this part was not required, I manually removed it.
+
+#### 5. Verification & Testing Steps
+*   Ran the entire sql script to make sure it created the tables appropriately.
+
+---
 
 

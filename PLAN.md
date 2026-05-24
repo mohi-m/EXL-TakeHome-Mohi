@@ -172,9 +172,6 @@ flowchart LR
   `dq_exception_report` (e.g. O1018 for DQ004, O1021 for DQ008/DQ010,
   PMT029 for DQ009, T010 for DQ011).
 
-### 8. `requirements.txt`
-- Remove `pandas`; keep `pytest`.
-
 ---
 
 ## Deliverable & verification for THIS task
