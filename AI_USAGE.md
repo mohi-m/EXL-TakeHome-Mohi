@@ -2,7 +2,7 @@
 
 ## Tooling & Setup
 *   **Primary AI Assistant:** Claude Code (Sonnet 4.6 & Opus 4.7)
-*   **Context Provided to AI:** Claude.md
+*   **Context Provided to AI:** CLAUDE.md for project context and PLAN.md for context on execution steps
 
 ---
 
@@ -19,8 +19,6 @@
 #### 3. Generated Code: Accepted vs. Rejected
 *   **Accepted:** 
     *   Generated a the desired structure
-*   **Rejected:** 
-    *   N/A
 
 #### 4. Manual Fixes & Modifications
 *   N/A
@@ -42,8 +40,6 @@
 #### 3. Generated Code: Accepted vs. Rejected
 *   **Accepted:** 
     *   Generated after asking explicit changes to the MD file
-*   **Rejected:** 
-    *   N/A
 
 #### 4. Manual Fixes & Modifications
 *   Additional changes requested in further iteration like - switching to sqlite and adding more hard contraints
@@ -67,8 +63,6 @@
 #### 3. Generated Code: Accepted vs. Rejected
 *   **Accepted:** 
     *   Accepted the Plan generated in the PLAN.md
-*   **Rejected:** 
-    *   Decided to reject the following issue "Inactive product sold: P011 (Protein Bar Box) has active_flag=N but is referenced by completed order O1015."
 
 #### 4. Manual Fixes & Modifications
 *   For Customer tables reconciliation, manually chose deduplicate based on same IDs and same full name + Phone/email
@@ -92,8 +86,6 @@
 #### 3. Generated Code: Accepted vs. Rejected
 *   **Accepted:** 
     *   Accepted the Plan generated in the PLAN.md
-*   **Rejected:** 
-    *   N/A
 
 #### 4. Manual Fixes & Modifications
 *   N/A
@@ -103,7 +95,7 @@
 
 ---
 
-### Task 5: Generating the transform.py script
+### Task 5: Generating the transform.py script {REJECTED}
 
 #### 1. Prompt
 *   src/transform.py — derive curated tables from sttm_target_mapping.csv
@@ -121,8 +113,6 @@ fact_customer_issue: customer_key via crosswalk (FK where possible), preserve is
 *   **Iteration 3:**  Add the DDL statement from the @src/transform.py script to the @sql/curated_model.sql file
 
 #### 3. Generated Code: Accepted vs. Rejected
-*   **Accepted:** 
-    *   
 *   **Rejected:** 
     *   Initial prompt's output rejected since the sttm_taget_mapping csv was missing a lot of columns that was required in the assement doc.
     *   The generated transform script was also running the ingest script which was not intended, hence rejected the version.
@@ -138,7 +128,7 @@ fact_customer_issue: customer_key via crosswalk (FK where possible), preserve is
 
 ---
 
-### Task 5: Generating the transform.py script {RETRY}
+### Task 5: Generating the transform.py script
 
 #### 1. Prompt
 *   Read the @PLAN.md and perform step 2 in part B
@@ -149,8 +139,6 @@ fact_customer_issue: customer_key via crosswalk (FK where possible), preserve is
 #### 3. Generated Code: Accepted vs. Rejected
 *   **Accepted:** 
     *   Asking claude code to read the plan.md kept it grounded to the plan and prduced the correct output.
-*   **Rejected:** 
-    *   N/A
 
 
 #### 4. Manual Fixes & Modifications
@@ -176,9 +164,6 @@ fact_customer_issue: customer_key via crosswalk (FK where possible), preserve is
 #### 3. Generated Code: Accepted vs. Rejected
 *   **Accepted:** 
     *   Accepted after the first iteration as it was able to indentify all the quality issues and some more.
-*   **Rejected:** 
-    *   N/A
-
 
 #### 4. Manual Fixes & Modifications
 *   Some of the suggested action did not make sense so updated it manually and made it blank. The issues like Country name US, USA and United States all normalised to USA does not need any further actions. So these changes are still recorded in the dq_exception_report but no suggested actions needed to be added for it.
@@ -197,8 +182,6 @@ fact_customer_issue: customer_key via crosswalk (FK where possible), preserve is
 *   **Iteration 1:**  Dont hard code the values in the script
 
 #### 3. Generated Code: Accepted vs. Rejected
-*   **Accepted:** 
-    *   N/A
 *   **Rejected:** 
     *   It consistently hardcoded the ids and values in the script making this not extesible.
 
@@ -211,7 +194,7 @@ fact_customer_issue: customer_key via crosswalk (FK where possible), preserve is
 
 ---
 
-### Task 7: Generating the reporting.py script {REJECTED}
+### Task 7: Generating the reporting.py script
 
 #### 1. Prompt
 *   Read the @PLAN.md and perform step 4 in part B
@@ -222,8 +205,6 @@ fact_customer_issue: customer_key via crosswalk (FK where possible), preserve is
 #### 3. Generated Code: Accepted vs. Rejected
 *   **Accepted:** 
     *   Accepted the changes as the output generated was correct and manually verfifed
-*   **Rejected:** 
-    *   N/A
 
 
 #### 4. Manual Fixes & Modifications
@@ -246,8 +227,6 @@ fact_customer_issue: customer_key via crosswalk (FK where possible), preserve is
 #### 3. Generated Code: Accepted vs. Rejected
 *   **Accepted:** 
     *   Generated the code perfectly since it was a straight forward task.
-*   **Rejected:** 
-    *   N/A
 
 
 #### 4. Manual Fixes & Modifications
@@ -269,8 +248,6 @@ fact_customer_issue: customer_key via crosswalk (FK where possible), preserve is
 #### 3. Generated Code: Accepted vs. Rejected
 *   **Accepted:** 
     *   The generated SQL was correct and created the correct database model.
-*   **Rejected:** 
-    *   N/A
 
 
 #### 4. Manual Fixes & Modifications
@@ -292,8 +269,6 @@ fact_customer_issue: customer_key via crosswalk (FK where possible), preserve is
 #### 3. Generated Code: Accepted vs. Rejected
 *   **Accepted:** 
     *   Generated tests for all the given cases correctly.
-*   **Rejected:** 
-    *   N/A
 
 
 #### 4. Manual Fixes & Modifications
@@ -301,5 +276,37 @@ fact_customer_issue: customer_key via crosswalk (FK where possible), preserve is
 
 #### 5. Verification & Testing Steps
 *   Read the code and made sure it covers a wide range of cases.
+
+---
+
+### Task 11: Generating README
+
+#### 1. Prompt
+*   Help me create a readme file which has the following sections:
+    Setup instructions
+    command to run
+    dependencies
+    Approach (Design decisions, assumptions, tradeoffs, known limitations, and next improvements)
+
+    So I initially setup the base repo with all the files and then I created a CLAUDE.md file to give a direct context of the project to Claude Code. Then I used ultrathinking to generate the plan and then used that plan to execute the steps one by one, verifying after each step, making manual edits if needed and then committing. The way I used AI is present in the AI_USAGE.md and the PLAN generated after the ClaudeCode's ultrathinking in in PLAN.md. I kept updating the PLAN.md as and when needed.
+
+#### 2. Iterations
+*   **Iteration 1:**   Create an updated architectural diagram in the README file and add it in the Archtecture section.
+*   **Iteration 2:**   Some things that are wrong:
+    - there should be no arrow from staging to dq_exception since dq_exception is only updated by quality_check.py.
+    - reporting.py only generated business_answers.md
+    - quality_ckecks.py generated exceptions.csv and data_quality_report.md 
+*   **Iteration 3:**    In the assumptions add the fact that I added DQ013 and DQ014. Also that I added suggested action in the data_quality.csv file
+
+#### 3. Generated Code: Accepted vs. Rejected
+*   **Accepted:** 
+    *   Generated a good base readme from which i can manually make changes.
+
+
+#### 4. Manual Fixes & Modifications
+*   Updated the README manually to add the context and assumption which the LLM cannot generate.
+
+#### 5. Verification & Testing Steps
+*   Read the entire README, line-by-line and made changes.
 
 ---
