@@ -188,3 +188,49 @@ fact_customer_issue: customer_key via crosswalk (FK where possible), preserve is
 
 ---
 
+### Task 5: Generating the reporting.py script {REJECTED}
+
+#### 1. Prompt
+*   Read the @PLAN.md and perform step 4 in part B
+
+#### 2. Iterations
+*   **Iteration 1:**  Dont hard code the values in the script
+
+#### 3. Generated Code: Accepted vs. Rejected
+*   **Accepted:** 
+    *   N/A
+*   **Rejected:** 
+    *   It consistently hardcoded the ids and values in the script making this not extesible.
+
+
+#### 4. Manual Fixes & Modifications
+*   N/A
+
+#### 5. Verification & Testing Steps
+*   Verified the output generated for each question
+
+---
+
+### Task 5: Generating the reporting.py script {REJECTED}
+
+#### 1. Prompt
+*   Read the @PLAN.md and perform step 4 in part B
+
+#### 2. Iterations
+*   **Iteration 1:**  Dont hard code the values in the script
+
+#### 3. Generated Code: Accepted vs. Rejected
+*   **Accepted:** 
+    *   N/A
+*   **Rejected:** 
+    *   It consistently hardcoded the ids and values in the script making this not extesible.
+
+
+#### 4. Manual Fixes & Modifications
+*   N/A
+
+#### 5. Verification & Testing Steps
+*   Verified the output generated for each question
+
+---
+
